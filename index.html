@@ -1,342 +1,291 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>WoT Duo — SaXon vs Devil_484</title>
-  <!-- Font Awesome 6 (танкові іконки) + Google Font (мілітарі шрифт) -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700;900&family=Roboto+Condensed:wght@400;700;900&display=swap" rel="stylesheet">
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>WoT Duo — SaXon vs Devil_484</title>
 
-    body {
-      background: transparent !important;
-      font-family: 'Roboto Condensed', 'Segoe UI', sans-serif;
-      color: #eee;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      padding: 12px;
-    }
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700;900&family=Roboto+Condensed:wght@400;700;900&display=swap" rel="stylesheet">
 
-    /* основний контейнер */
-    .wrap {
-      width: 980px;
-      display: flex;
-      gap: 24px;
-      align-items: stretch;
-    }
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
 
-    /* спільний стиль карток — важкий метал, подряпини */
-    .card {
-      flex: 1;
-      background: #1e1e1e;
-      background-image: 
-        repeating-linear-gradient(45deg, rgba(255,255,255,0.02) 0px, rgba(255,255,255,0.02) 4px, transparent 4px, transparent 8px),
-        radial-gradient(circle at 20% 30%, rgba(210, 180, 140, 0.15) 0%, transparent 40%);
-      border-radius: 30px;
-      padding: 20px;
-      border: 1px solid rgba(255, 215, 0, 0.3);
-      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.8), inset 0 1px 3px rgba(255, 215, 0, 0.3);
-      position: relative;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      backdrop-filter: blur(2px);
-    }
+:root{
+  --gold:#b8860b;
+  --gold2:#ffd966;
 
-    /* "зварні шви" по краях */
-    .card::before {
-      content: "";
-      position: absolute;
-      top: 8px; left: 8px; right: 8px; bottom: 8px;
-      border: 1px dashed rgba(255, 200, 50, 0.25);
-      border-radius: 22px;
-      pointer-events: none;
-      z-index: 1;
-    }
+  --p1:#7cb342;
+  --p1a:#aeea00;
+  --p1txt:#dfffdc;
 
-    /* індивідуальний відтінок для гравців */
-    .card.p1 {
-      background-color: #1a2a1a;
-      border-color: #7cb342;
-    }
-    .card.p1 .big .value {
-      color: #a5d6a5;
-      text-shadow: 0 0 10px #2e7d32;
-    }
-    .card.p1 .bar i {
-      background: linear-gradient(90deg, #558b2f, #aeea00, #558b2f);
-    }
+  --p2:#ff7043;
+  --p2a:#ffab91;
+  --p2txt:#ffe0d7;
 
-    .card.p2 {
-      background-color: #2a1a1a;
-      border-color: #ff7043;
-    }
-    .card.p2 .big .value {
-      color: #ffab91;
-      text-shadow: 0 0 10px #bf360c;
-    }
-    .card.p2 .bar i {
-      background: linear-gradient(90deg, #bf360c, #ff7043, #bf360c);
-    }
+  --radius:30px;
+}
 
-    /* верхня частина: бейдж з аватаром та нікнеймом */
-    .top {
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-    }
+body{
+  background:transparent!important;
+  font-family:'Roboto Condensed','Segoe UI',sans-serif;
+  color:#eee;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:100vh;
+  padding:14px;
+}
 
-    .badge {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      background: rgba(0, 0, 0, 0.6);
-      padding: 8px 16px 8px 10px;
-      border-radius: 60px;
-      border: 1px solid rgba(255, 215, 0, 0.4);
-      box-shadow: inset 0 2px 5px rgba(0,0,0,0.8), 0 2px 0 rgba(255,215,0,0.2);
-    }
+.wrap{
+  width:980px;
+  display:flex;
+  gap:24px;
+  align-items:stretch;
+}
 
-    .avatar {
-      width: 52px;
-      height: 52px;
-      border-radius: 50%;
-      background: #2b2b2b;
-      border: 2px solid #b8860b;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      font-size: 2rem;
-      color: #ffd966;
-      box-shadow: 0 0 15px #ffb300;
-    }
+/* CARD */
+.card{
+  flex:1;
+  position:relative;
+  border-radius:var(--radius);
+  padding:22px;
+  border:1px solid rgba(184,134,11,.35);
+  background:
+    radial-gradient(circle at 20% 20%, rgba(255,255,255,.06), transparent 60%),
+    linear-gradient(180deg, #111, #0b0b0b);
+  box-shadow:
+    0 20px 40px rgba(0,0,0,.8),
+    inset 0 1px 0 rgba(255,255,255,.05);
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+}
 
-    .name {
-      display: flex;
-      flex-direction: column;
-    }
+/* HEADER */
+.top{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
 
-    .name b {
-      font-size: 1.8rem;
-      font-weight: 900;
-      line-height: 1.2;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      font-family: 'Oswald', sans-serif;
-    }
+.badge{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:12px;
+}
 
-    /* прогрес-блок */
-    .progress {
-      background: rgba(0, 0, 0, 0.7);
-      border-radius: 28px;
-      padding: 20px;
-      border: 1px solid #5a4a2e;
-      box-shadow: inset 0 5px 10px #00000080;
-    }
+.avatar{
+  width:60px;height:60px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border:2px solid var(--gold);
+  background:linear-gradient(180deg,#222,#111);
+  color:var(--gold2);
+  font-size:2rem;
+  box-shadow:0 0 18px rgba(255,215,0,.25);
+}
 
-    .big {
-      display: flex;
-      align-items: baseline;
-      gap: 10px;
-      margin-bottom: 10px;
-    }
+.name b{
+  font-family:'Oswald',sans-serif;
+  font-size:2.4rem;
+  font-weight:900;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  text-align:center;
+}
 
-    .big .value {
-      font-size: 4.2rem;
-      font-weight: 900;
-      line-height: 1;
-      font-family: 'Oswald', sans-serif;
-    }
+/* PROGRESS */
+.progress{
+  border-radius:24px;
+  padding:20px;
+  background:linear-gradient(180deg, rgba(0,0,0,.65), rgba(0,0,0,.45));
+  border:1px solid rgba(184,134,11,.25);
+  box-shadow: inset 0 6px 18px rgba(0,0,0,.8);
+}
 
-    .big .unit {
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: #b0b0b0;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
+.big{
+  display:flex;
+  justify-content:center;
+  align-items:baseline;
+  gap:12px;
+  margin-bottom:14px;
+}
 
-    /* сам прогрес-бар — імітує індикатор боєзапасу */
-    .bar {
-      height: 20px;
-      border-radius: 999px;
-      background: #111;
-      border: 1px solid #5a4a2e;
-      box-shadow: inset 0 2px 5px black;
-      margin: 10px 0 15px;
-      overflow: hidden;
-      position: relative;
-    }
+.big .value{
+  font-family:'Oswald',sans-serif;
+  font-size:4.6rem;
+  font-weight:900;
+  line-height:1;
+}
 
-    .bar i {
-      display: block;
-      height: 100%;
-      width: 0%;
-      border-radius: 999px;
-      transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-      box-shadow: 0 0 15px currentColor;
-    }
+.big .unit{
+  font-size:1.1rem;
+  font-weight:800;
+  color:#bbb;
+  text-transform:uppercase;
+  letter-spacing:1px;
+}
 
-    /* сітка KPI */
-    .grid2 {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 14px;
-    }
+.p1 .big .value{
+  color:var(--p1txt);
+  text-shadow:0 0 14px rgba(124,179,66,.6);
+}
+.p2 .big .value{
+  color:var(--p2txt);
+  text-shadow:0 0 14px rgba(255,112,67,.6);
+}
 
-    .kpi {
-      background: rgba(0, 0, 0, 0.6);
-      border-radius: 20px;
-      padding: 14px 6px;
-      text-align: center;
-      border: 1px solid #b8860b;
-      box-shadow: inset 0 2px 8px black;
-    }
+/* BAR */
+.bar{
+  height:22px;
+  border-radius:999px;
+  background:#111;
+  border:1px solid rgba(184,134,11,.35);
+  box-shadow: inset 0 2px 6px black;
+  margin:12px 0 18px;
+  overflow:hidden;
+}
 
-    .kpi .label {
-      font-size: 0.8rem;
-      color: #cfcfcf;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
+.bar i{
+  display:block;
+  height:100%;
+  width:0%;
+  border-radius:999px;
+  transition:width .6s ease;
+}
 
-    .kpi .val {
-      margin-top: 4px;
-      font-size: 2.2rem;
-      font-weight: 900;
-      color: #ffd966;
-      line-height: 1.2;
-      font-family: 'Oswald', sans-serif;
-      text-shadow: 0 0 8px #ff8c00;
-    }
+.p1 .bar i{
+  background:linear-gradient(90deg, var(--p1), var(--p1a), var(--p1));
+}
+.p2 .bar i{
+  background:linear-gradient(90deg, var(--p2), var(--p2a), var(--p2));
+}
 
-    /* додаткові танкові деталі (гусениці знизу) */
-    .card::after {
-      content: "⚙️⚙️⚙️";
-      position: absolute;
-      bottom: 5px;
-      right: 15px;
-      font-size: 1.5rem;
-      opacity: 0.1;
-      color: #b8860b;
-      transform: rotate(10deg);
-      pointer-events: none;
-    }
+/* KPI */
+.grid2{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:14px;
+}
 
-    /* адаптація */
-    @media (max-width: 1000px) {
-      .wrap { flex-direction: column; }
-    }
-  </style>
+.kpi{
+  border-radius:20px;
+  padding:14px 8px;
+  text-align:center;
+  background:linear-gradient(180deg, rgba(0,0,0,.6), rgba(0,0,0,.35));
+  border:1px solid rgba(184,134,11,.3);
+}
+
+.kpi .label{
+  font-size:.85rem;
+  color:#ccc;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:.7px;
+}
+
+.kpi .val{
+  margin-top:6px;
+  font-family:'Oswald',sans-serif;
+  font-size:2.3rem;
+  font-weight:900;
+  color:var(--gold2);
+  text-shadow:0 0 10px rgba(255,140,0,.6);
+}
+
+@media (max-width:1000px){
+  .wrap{flex-direction:column}
+}
+</style>
 </head>
 <body>
 
 <div class="wrap">
 
-  <!-- ПЕРШИЙ ГРАВЕЦЬ – SaXon (тільки нік) -->
-  <div class="card p1">
-    <div class="top">
-      <div class="badge">
-        <div class="avatar">
-          <i class="fa-solid fa-binoculars"></i> <!-- бінокль -->
-        </div>
-        <div class="name">
-          <b>SaXon</b>
-          <!-- підпис "РОЗВІДНИК" видалено -->
-        </div>
+<div class="card p1">
+  <div class="top">
+    <div class="badge">
+      <div class="avatar">
+        <i class="fa-solid fa-binoculars"></i>
       </div>
-      <!-- pill видалено раніше -->
-    </div>
-
-    <div class="progress">
-      <div class="big">
-        <div class="value" id="p1_left_big">0</div>
-        <div class="unit">залишилось</div>
-      </div>
-
-      <!-- прогрес-бар (id не змінюється) -->
-      <div class="bar"><i id="p1_bar"></i></div>
-
-      <div class="grid2">
-        <div class="kpi">
-          <div class="label">Додали глядачі</div>
-          <div class="val" id="p1_added">0</div>
-        </div>
-        <div class="kpi">
-          <div class="label">Виконано</div>
-          <div class="val" id="p1_done">0</div>
-        </div>
+      <div class="name">
+        <b>SaXon</b>
       </div>
     </div>
-    <!-- маленька іконка танка -->
-    <div style="position:absolute; bottom:8px; left:12px; opacity:0.15; font-size:2rem;">⚡</div>
   </div>
 
-  <!-- ДРУГИЙ ГРАВЕЦЬ – Devil_484 (тільки нік) -->
-  <div class="card p2">
-    <div class="top">
-      <div class="badge">
-        <div class="avatar">
-          <i class="fa-solid fa-crosshairs"></i> <!-- приціл -->
-        </div>
-        <div class="name">
-          <b>Devil_484</b>
-          <!-- підпис "ЗАВДАННЯ ШКОДИ" видалено -->
-        </div>
-      </div>
-      <!-- pill видалено раніше -->
+  <div class="progress">
+    <div class="big">
+      <div class="value" id="p1_left_big">0</div>
+      <div class="unit">залишилось</div>
     </div>
 
-    <div class="progress">
-      <div class="big">
-        <div class="value" id="p2_left_big">0</div>
-        <div class="unit">залишилось</div>
+    <div class="bar"><i id="p1_bar"></i></div>
+
+    <div class="grid2">
+      <div class="kpi">
+        <div class="label">Додали глядачі</div>
+        <div class="val" id="p1_added">0</div>
       </div>
-
-      <div class="bar"><i id="p2_bar"></i></div>
-
-      <div class="grid2">
-        <div class="kpi">
-          <div class="label">Додали глядачі</div>
-          <div class="val" id="p2_added">0</div>
-        </div>
-        <div class="kpi">
-          <div class="label">Виконано</div>
-          <div class="val" id="p2_done">0</div>
-        </div>
+      <div class="kpi">
+        <div class="label">Виконано</div>
+        <div class="val" id="p1_done">0</div>
       </div>
     </div>
-    <div style="position:absolute; bottom:8px; left:12px; opacity:0.15; font-size:2rem;">💥</div>
   </div>
+</div>
+
+<div class="card p2">
+  <div class="top">
+    <div class="badge">
+      <div class="avatar">
+        <i class="fa-solid fa-crosshairs"></i>
+      </div>
+      <div class="name">
+        <b>Devil_484</b>
+      </div>
+    </div>
+  </div>
+
+  <div class="progress">
+    <div class="big">
+      <div class="value" id="p2_left_big">0</div>
+      <div class="unit">залишилось</div>
+    </div>
+
+    <div class="bar"><i id="p2_bar"></i></div>
+
+    <div class="grid2">
+      <div class="kpi">
+        <div class="label">Додали глядачі</div>
+        <div class="val" id="p2_added">0</div>
+      </div>
+      <div class="kpi">
+        <div class="label">Виконано</div>
+        <div class="val" id="p2_done">0</div>
+      </div>
+    </div>
+  </div>
+</div>
 
 </div>
 
-<!-- НЕ ЗМІНЮЄМО ЛОГІКУ!  Той самий скрипт, ті самі ID -->
+<!-- ЛОГІКА НЕ ЗМІНЕНА -->
 <script>
 const SHEET_ID="17phnEn-NW-OnrZg4DcW65r-Xoq6ScsdVjS5yL0SS3fk";
 const GID="621327957";
 const URL=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=${GID}`;
 const REFRESH_MS = 15000;
 
-/* нормальний CSV парсер (без trim, з лапками) */
 function parseCSV(text){
   const rows = [];
   let row = [], cur = "", inQ = false;
-
   for(let i=0;i<text.length;i++){
     const ch = text[i];
-
     if(ch === '"'){
       if(inQ && text[i+1] === '"'){ cur += '"'; i++; }
       else inQ = !inQ;
@@ -351,8 +300,6 @@ function parseCSV(text){
       cur += ch;
     }
   }
-
-  // останній рядок
   if(cur.length || row.length){
     if(cur.endsWith('\r')) cur = cur.slice(0,-1);
     row.push(cur);
@@ -361,10 +308,9 @@ function parseCSV(text){
   return rows;
 }
 
-/* прибираємо ВСЕ, крім цифр і мінуса */
 function toNumber(val){
   if(val === undefined || val === null) return 0;
-  const s = String(val).replace(/[^\d\-]/g, ""); // з'їсть і пробіли, і NBSP
+  const s = String(val).replace(/[^\d\-]/g, "");
   const n = parseInt(s, 10);
   return Number.isFinite(n) ? n : 0;
 }
@@ -381,16 +327,13 @@ async function load(){
   const t = await r.text();
   const d = parseCSV(t);
 
-  // row 10 -> index 9; row 12 -> 11; row 14 -> 13
-  // col C -> 2; col D -> 3
+  const p1_added_v = toNumber(d[9]?.[2]);
+  const p1_done_v  = toNumber(d[11]?.[2]);
+  const p1_left_v  = toNumber(d[13]?.[2]);
 
-  const p1_added_v = toNumber(d[9]?.[2]);   // C10
-  const p1_done_v  = toNumber(d[11]?.[2]);  // C12
-  const p1_left_v  = toNumber(d[13]?.[2]);  // C14
-
-  const p2_added_v = toNumber(d[9]?.[3]);   // D10
-  const p2_done_v  = toNumber(d[11]?.[3]);  // D12
-  const p2_left_v  = toNumber(d[13]?.[3]);  // D14
+  const p2_added_v = toNumber(d[9]?.[3]);
+  const p2_done_v  = toNumber(d[11]?.[3]);
+  const p2_left_v  = toNumber(d[13]?.[3]);
 
   p1_left_big.textContent = fmt(p1_left_v);
   p1_added.textContent    = fmt(p1_added_v);
@@ -407,6 +350,5 @@ load().catch(console.log);
 setInterval(()=>load().catch(console.log), REFRESH_MS);
 </script>
 
-<!-- Усі ID елементів оригінальні, тому дані оновлюються, як і раніше -->
 </body>
 </html>
