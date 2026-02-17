@@ -3,283 +3,223 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>WoT Duo — SaXon vs Devil_484</title>
+<title>WoT Duo Tracker — 5s Slow Motion</title>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700;900&family=Roboto+Condensed:wght@400;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Quantico:wght@400;700&display=swap" rel="stylesheet">
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-
-:root{
-  --gold:#b8860b;
-  --gold2:#ffd966;
-
-  --p1:#7cb342;
-  --p1a:#aeea00;
-  --p1txt:#dfffdc;
-
-  --p2:#ff7043;
-  --p2a:#ffab91;
-  --p2txt:#ffe0d7;
-
-  --radius:30px;
+:root {
+  --scout-color: #4cd137;
+  --scout-glow: rgba(76, 209, 55, 0.4);
+  --damage-color: #ff4d4d;
+  --damage-glow: rgba(255, 77, 77, 0.4);
+  --panel-bg: rgba(15, 17, 21, 0.95);
 }
 
-body{
-  background:transparent!important;
-  font-family:'Roboto Condensed','Segoe UI',sans-serif;
-  color:#eee;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  min-height:100vh;
-  padding:14px;
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: transparent !important;
+  font-family: 'Quantico', sans-serif;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
 }
 
-.wrap{
-  width:980px;
-  display:flex;
-  gap:24px;
-  align-items:stretch;
+.battle-container {
+  display: flex;
+  gap: 25px;
+  width: 1000px;
 }
 
-/* CARD */
-.card{
-  flex:1;
-  position:relative;
-  border-radius:var(--radius);
-  padding:22px;
-  border:1px solid rgba(184,134,11,.35);
-  background:
-    radial-gradient(circle at 20% 20%, rgba(255,255,255,.06), transparent 60%),
-    linear-gradient(180deg, #111, #0b0b0b);
-  box-shadow:
-    0 20px 40px rgba(0,0,0,.8),
-    inset 0 1px 0 rgba(255,255,255,.05);
-  display:flex;
-  flex-direction:column;
-  gap:18px;
+.player-card {
+  flex: 1;
+  background: var(--panel-bg);
+  position: relative;
+  padding: 30px 25px;
+  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0 15px 40px rgba(0,0,0,0.6);
 }
 
-/* HEADER */
-.top{
-  display:flex;
-  justify-content:center;
-  align-items:center;
+.scout { 
+  border-top: 4px solid var(--scout-color);
+  clip-path: polygon(0 0, 100% 0, 100% 88%, 92% 100%, 0 100%); 
+}
+.dealer { 
+  border-top: 4px solid var(--damage-color);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 8% 100%, 0 88%); 
 }
 
-.badge{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:12px;
+.header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 25px;
 }
 
-.avatar{
-  width:60px;height:60px;
-  border-radius:50%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  border:2px solid var(--gold);
-  background:linear-gradient(180deg,#222,#111);
-  color:var(--gold2);
-  font-size:2rem;
-  box-shadow:0 0 18px rgba(255,215,0,.25);
+.role-icon {
+  font-size: 28px;
+  width: 55px; height: 55px;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(0,0,0,0.6);
+  border-radius: 4px;
 }
 
-.name b{
-  font-family:'Oswald',sans-serif;
-  font-size:2.4rem;
-  font-weight:900;
-  letter-spacing:1.5px;
-  text-transform:uppercase;
-  text-align:center;
+.scout .role-icon { color: var(--scout-color); border-bottom: 2px solid var(--scout-color); }
+.dealer .role-icon { color: var(--damage-color); border-bottom: 2px solid var(--damage-color); }
+
+.nickname {
+  font-family: 'Oswald', sans-serif;
+  font-size: 34px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
 }
 
-/* PROGRESS */
-.progress{
-  border-radius:24px;
-  padding:20px;
-  background:linear-gradient(180deg, rgba(0,0,0,.65), rgba(0,0,0,.45));
-  border:1px solid rgba(184,134,11,.25);
-  box-shadow: inset 0 6px 18px rgba(0,0,0,.8);
+.main-stat {
+  text-align: center;
+  background: linear-gradient(180deg, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.2) 100%);
+  padding: 25px 15px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  border: 1px solid rgba(255,255,255,0.05);
 }
 
-.big{
-  display:flex;
-  justify-content:center;
-  align-items:baseline;
-  gap:12px;
-  margin-bottom:14px;
+.main-stat .label {
+  font-size: 18px;
+  color: #aaa;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  letter-spacing: 1.5px;
 }
 
-.big .value{
-  font-family:'Oswald',sans-serif;
-  font-size:4.6rem;
-  font-weight:900;
-  line-height:1;
+.main-stat .value {
+  font-size: 90px;
+  font-weight: 700;
+  line-height: 1;
+  font-family: 'Oswald', sans-serif;
+  display: inline-block;
 }
 
-.big .unit{
-  font-size:1.1rem;
-  font-weight:800;
-  color:#bbb;
-  text-transform:uppercase;
-  letter-spacing:1px;
+.scout .value { color: var(--scout-color); text-shadow: 0 0 30px var(--scout-glow); }
+.dealer .value { color: var(--damage-color); text-shadow: 0 0 30px var(--damage-glow); }
+
+/* Плавний ефект мікро-руху при зміні */
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.02); opacity: 0.9; }
+  100% { transform: scale(1); }
 }
 
-.p1 .big .value{
-  color:var(--p1txt);
-  text-shadow:0 0 14px rgba(124,179,66,.6);
-}
-.p2 .big .value{
-  color:var(--p2txt);
-  text-shadow:0 0 14px rgba(255,112,67,.6);
+.changing {
+  animation: pulse 0.15s ease-out;
 }
 
-/* BAR */
-.bar{
-  height:22px;
-  border-radius:999px;
-  background:#111;
-  border:1px solid rgba(184,134,11,.35);
-  box-shadow: inset 0 2px 6px black;
-  margin:12px 0 18px;
-  overflow:hidden;
+.bar-bg {
+  height: 14px;
+  background: #0a0a0a;
+  border-radius: 3px;
+  margin-bottom: 30px;
+  border: 1px solid rgba(255,255,255,0.08);
+  overflow: hidden;
 }
 
-.bar i{
-  display:block;
-  height:100%;
-  width:0%;
-  border-radius:999px;
-  transition:width .6s ease;
+.bar-fill {
+  height: 100%;
+  width: 0%;
+  /* Синхронізуємо смужку з 5-секундною анімацією */
+  transition: width 5s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
-.p1 .bar i{
-  background:linear-gradient(90deg, var(--p1), var(--p1a), var(--p1));
-}
-.p2 .bar i{
-  background:linear-gradient(90deg, var(--p2), var(--p2a), var(--p2));
+.scout .bar-fill { background: linear-gradient(90deg, #1b5e20, var(--scout-color)); }
+.dealer .bar-fill { background: linear-gradient(90deg, #b71c1c, var(--damage-color)); }
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
 }
 
-/* KPI */
-.grid2{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:14px;
+.stat-box {
+  background: rgba(255,255,255,0.03);
+  padding: 15px 5px;
+  border-radius: 6px;
+  text-align: center;
+  border: 1px solid rgba(255,255,255,0.02);
 }
 
-.kpi{
-  border-radius:20px;
-  padding:14px 8px;
-  text-align:center;
-  background:linear-gradient(180deg, rgba(0,0,0,.6), rgba(0,0,0,.35));
-  border:1px solid rgba(184,134,11,.3);
+.stat-box .small-label {
+  font-size: 14px;
+  color: #777;
+  text-transform: uppercase;
+  margin-bottom: 8px;
 }
 
-.kpi .label{
-  font-size:20px;
-  color:#ccc;
-  font-weight:800;
-  text-transform:uppercase;
-  letter-spacing:.7px;
-}
-
-.kpi .val{
-  margin-top:6px;
-  font-family:'Oswald',sans-serif;
-  font-size:2.3rem;
-  font-weight:900;
-  color:var(--gold2);
-  text-shadow:0 0 10px rgba(255,140,0,.6);
-}
-
-@media (max-width:1000px){
-  .wrap{flex-direction:column}
+.stat-box .small-value {
+  font-size: 34px;
+  font-weight: 700;
+  font-family: 'Oswald', sans-serif;
+  color: #efefef;
 }
 </style>
 </head>
 <body>
 
-<div class="wrap">
-
-<div class="card p1">
-  <div class="top">
-    <div class="badge">
-      <div class="avatar">
-        <i class="fa-solid fa-binoculars"></i>
-      </div>
-      <div class="name">
-        <b>SaXon</b>
-      </div>
+<div class="battle-container">
+  <div class="player-card scout">
+    <div class="header">
+      <div class="role-icon"><i class="fa-solid fa-binoculars"></i></div>
+      <div class="nickname">SaXon</div>
     </div>
-  </div>
-
-  <div class="progress">
-    <div class="big">
+    <div class="main-stat">
+      <div class="label">Залишилось насвітити</div>
       <div class="value" id="p1_left_big">0</div>
-      <div class="unit">залишилось</div>
     </div>
-
-    <div class="bar"><i id="p1_bar"></i></div>
-
-    <div class="grid2">
-      <div class="kpi">
-        <div class="label">Додали глядачі</div>
-        <div class="val" id="p1_added">0</div>
+    <div class="bar-bg"><div class="bar-fill" id="p1_bar"></div></div>
+    <div class="stats-grid">
+      <div class="stat-box">
+        <div class="small-label">Глядачі додали</div>
+        <div class="small-value" id="p1_added">0</div>
       </div>
-      <div class="kpi">
-        <div class="label">Виконано</div>
-        <div class="val" id="p1_done">0</div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="card p2">
-  <div class="top">
-    <div class="badge">
-      <div class="avatar">
-        <i class="fa-solid fa-crosshairs"></i>
-      </div>
-      <div class="name">
-        <b>Devil_484</b>
+      <div class="stat-box">
+        <div class="small-label">Виконано</div>
+        <div class="small-value" id="p1_done">0</div>
       </div>
     </div>
   </div>
 
-  <div class="progress">
-    <div class="big">
+  <div class="player-card dealer">
+    <div class="header">
+      <div class="role-icon"><i class="fa-solid fa-crosshairs"></i></div>
+      <div class="nickname">Devil_484</div>
+    </div>
+    <div class="main-stat">
+      <div class="label">Залишилось настріляти</div>
       <div class="value" id="p2_left_big">0</div>
-      <div class="unit">залишилось</div>
     </div>
-
-    <div class="bar"><i id="p2_bar"></i></div>
-
-    <div class="grid2">
-      <div class="kpi">
-        <div class="label">Додали глядачі</div>
-        <div class="val" id="p2_added">0</div>
+    <div class="bar-bg"><div class="bar-fill" id="p2_bar"></div></div>
+    <div class="stats-grid">
+      <div class="stat-box">
+        <div class="small-label">Глядачі додали</div>
+        <div class="small-value" id="p2_added">0</div>
       </div>
-      <div class="kpi">
-        <div class="label">Виконано</div>
-        <div class="val" id="p2_done">0</div>
+      <div class="stat-box">
+        <div class="small-label">Виконано</div>
+        <div class="small-value" id="p2_done">0</div>
       </div>
     </div>
   </div>
 </div>
 
-</div>
-
-<!-- ЛОГІКА НЕ ЗМІНЕНА -->
 <script>
 const SHEET_ID="17phnEn-NW-OnrZg4DcW65r-Xoq6ScsdVjS5yL0SS3fk";
 const GID="621327957";
 const URL=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=${GID}`;
 const REFRESH_MS = 5000;
+
+let lastValues = { p1: 0, p2: 0 };
 
 function parseCSV(text){
   const rows = [];
@@ -293,17 +233,13 @@ function parseCSV(text){
       row.push(cur); cur = "";
     } else if(ch === '\n' && !inQ){
       if(cur.endsWith('\r')) cur = cur.slice(0,-1);
-      row.push(cur);
-      rows.push(row);
+      row.push(cur); rows.push(row);
       row = []; cur = "";
-    } else {
-      cur += ch;
-    }
+    } else { cur += ch; }
   }
   if(cur.length || row.length){
     if(cur.endsWith('\r')) cur = cur.slice(0,-1);
-    row.push(cur);
-    rows.push(row);
+    row.push(cur); rows.push(row);
   }
   return rows;
 }
@@ -314,7 +250,45 @@ function toNumber(val){
   const n = parseInt(s, 10);
   return Number.isFinite(n) ? n : 0;
 }
-const fmt = v => toNumber(v).toLocaleString("uk-UA");
+
+const fmt = v => Math.floor(v).toLocaleString("uk-UA");
+
+// Більш "гумова" функція уповільнення для 5 секунд
+function easeOutQuint(x) {
+  return 1 - Math.pow(1 - x, 5);
+}
+
+function animateValue(obj, start, end, duration) {
+  if (start === end) {
+      obj.textContent = fmt(end);
+      return;
+  }
+  
+  let startTimestamp = null;
+  const step = (timestamp) => {
+    if (!startTimestamp) startTimestamp = timestamp;
+    const elapsed = timestamp - startTimestamp;
+    const progress = Math.min(elapsed / duration, 1);
+    
+    const easedProgress = easeOutQuint(progress);
+    const current = start + (end - start) * easedProgress;
+    
+    obj.textContent = fmt(current);
+    
+    // Візуальний відгук
+    if (Math.abs(current - end) > 1) {
+       obj.classList.add('changing');
+       setTimeout(() => obj.classList.remove('changing'), 60);
+    }
+    
+    if (progress < 1) {
+      window.requestAnimationFrame(step);
+    } else {
+      obj.textContent = fmt(end);
+    }
+  };
+  window.requestAnimationFrame(step);
+}
 
 function setBar(bar, done, left){
   const total = Math.max(0, done + left);
@@ -323,31 +297,39 @@ function setBar(bar, done, left){
 }
 
 async function load(){
-  const r = await fetch(URL + "&_=" + Date.now());
-  const t = await r.text();
-  const d = parseCSV(t);
+  try {
+    const r = await fetch(URL + "&_=" + Date.now());
+    const t = await r.text();
+    const d = parseCSV(t);
 
-  const p1_added_v = toNumber(d[9]?.[2]);
-  const p1_done_v  = toNumber(d[11]?.[2]);
-  const p1_left_v  = toNumber(d[13]?.[2]);
+    const p1_added_v = toNumber(d[9]?.[2]);
+    const p1_done_v  = toNumber(d[11]?.[2]);
+    const p1_left_v  = toNumber(d[13]?.[2]);
 
-  const p2_added_v = toNumber(d[9]?.[3]);
-  const p2_done_v  = toNumber(d[11]?.[3]);
-  const p2_left_v  = toNumber(d[13]?.[3]);
+    const p2_added_v = toNumber(d[9]?.[3]);
+    const p2_done_v  = toNumber(d[11]?.[3]);
+    const p2_left_v  = toNumber(d[13]?.[3]);
 
-  p1_left_big.textContent = fmt(p1_left_v);
-  p1_added.textContent    = fmt(p1_added_v);
-  p1_done.textContent     = fmt(p1_done_v);
-  setBar(p1_bar, p1_done_v, p1_left_v);
+    // Анімація триває рівно 5000мс
+    animateValue(p1_left_big, lastValues.p1, p1_left_v, 5000);
+    animateValue(p2_left_big, lastValues.p2, p2_left_v, 5000);
 
-  p2_left_big.textContent = fmt(p2_left_v);
-  p2_added.textContent    = fmt(p2_added_v);
-  p2_done.textContent     = fmt(p2_done_v);
-  setBar(p2_bar, p2_done_v, p2_left_v);
+    lastValues.p1 = p1_left_v;
+    lastValues.p2 = p2_left_v;
+
+    p1_added.textContent = fmt(p1_added_v);
+    p1_done.textContent  = fmt(p1_done_v);
+    setBar(p1_bar, p1_done_v, p1_left_v);
+
+    p2_added.textContent = fmt(p2_added_v);
+    p2_done.textContent  = fmt(p2_done_v);
+    setBar(p2_bar, p2_done_v, p2_left_v);
+    
+  } catch (e) { console.error(e); }
 }
 
-load().catch(console.log);
-setInterval(()=>load().catch(console.log), REFRESH_MS);
+load();
+setInterval(load, REFRESH_MS);
 </script>
 
 </body>
