@@ -1,336 +1,442 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>WoT Duo Tracker — 5s Slow Motion</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WoT DUO · glass (помаранчеві/бірюзові цифри)</title>
+  
+  <!-- Fonts & Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Plus+Jakarta+Sans:wght@500;700&display=swap" rel="stylesheet">
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Quantico:wght@400;700&display=swap" rel="stylesheet">
+    body {
+      background: transparent !important;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Inter', sans-serif;
+      color: #fff;
+      padding: 16px;
+    }
 
-<style>
-:root {
-  --scout-color: #4cd137;
-  --scout-glow: rgba(76, 209, 55, 0.4);
-  --damage-color: #ff4d4d;
-  --damage-glow: rgba(255, 77, 77, 0.4);
-  --panel-bg: rgba(15, 17, 21, 0.95);
-}
+    /* головний контейнер – сучасна сітка */
+    .tracker-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 28px;
+      justify-content: center;
+      width: 100%;
+      max-width: 1200px;
+    }
 
-* { margin: 0; padding: 0; box-sizing: border-box; }
+    /* картка гравця – скляний ефект (без ховера) */
+    .glass-card {
+      flex: 1 1 380px;
+      min-width: 340px;
+      background: rgba(10, 15, 25, 0.7);
+      backdrop-filter: blur(15px) saturate(180%);
+      -webkit-backdrop-filter: blur(15px) saturate(180%);
+      border-radius: 42px;
+      padding: 32px 28px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), inset 0 1px 2px rgba(255, 255, 255, 0.08);
+    }
 
-body {
-  background: transparent !important;
-  font-family: 'Quantico', sans-serif;
-  color: #fff;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-}
+    /* Індивідуальний акцент – верхня лінія (без неону) */
+    .scout {
+      border-top: 3px solid #2ef27c;
+    }
+    .dealer {
+      border-top: 3px solid #ff5e7d;
+    }
 
-.battle-container {
-  display: flex;
-  gap: 25px;
-  width: 1000px;
-}
+    /* шапка: роль + нік */
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 32px;
+    }
 
-.player-card {
-  flex: 1;
-  background: var(--panel-bg);
-  position: relative;
-  padding: 30px 25px;
-  border: 1px solid rgba(255,255,255,0.1);
-  box-shadow: 0 15px 40px rgba(0,0,0,0.6);
-}
+    .role-badge {
+      width: 64px;
+      height: 64px;
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(4px);
+    }
 
-.scout { 
-  border-top: 4px solid var(--scout-color);
-  clip-path: polygon(0 0, 100% 0, 100% 88%, 92% 100%, 0 100%); 
-}
-.dealer { 
-  border-top: 4px solid var(--damage-color);
-  clip-path: polygon(0 0, 100% 0, 100% 100%, 8% 100%, 0 88%); 
-}
+    .scout .role-badge {
+      color: #2ef27c;
+    }
+    .dealer .role-badge {
+      color: #ff5e7d;
+    }
 
-.header {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  margin-bottom: 25px;
-}
+    .nickname {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 700;
+      font-size: 70px;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #f0f0f0 0%, #b0b0b0 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
 
-.role-icon {
-  font-size: 28px;
-  width: 55px; height: 55px;
-  display: flex; align-items: center; justify-content: center;
-  background: rgba(0,0,0,0.6);
-  border-radius: 4px;
-}
+    /* головний показник */
+    .primary-stat {
+      text-align: center;
+      background: rgba(0, 0, 0, 0.25);
+      border-radius: 36px;
+      padding: 24px 12px;
+      margin-bottom: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(4px);
+    }
 
-.scout .role-icon { color: var(--scout-color); border-bottom: 2px solid var(--scout-color); }
-.dealer .role-icon { color: var(--damage-color); border-bottom: 2px solid var(--damage-color); }
+    .primary-stat .label {
+      font-size: 30px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      color: rgba(255, 255, 255, 0.70);
+      margin-bottom: 12px;
+    }
 
-.nickname {
-  font-family: 'Oswald', sans-serif;
-  font-size: 34px;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-}
+    .primary-stat .value {
+      font-size: 5.5rem;
+      font-weight: 800;
+      line-height: 1;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
 
-.main-stat {
-  text-align: center;
-  background: linear-gradient(180deg, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.2) 100%);
-  padding: 25px 15px;
-  border-radius: 10px;
-  margin-bottom: 20px;
-  border: 1px solid rgba(255,255,255,0.05);
-}
+    .scout .value {
+      color: #2ef27c;
+    }
+    .dealer .value {
+      color: #ff5e7d;
+    }
 
-.main-stat .label {
-  font-size: 18px;
-  color: #aaa;
-  text-transform: uppercase;
-  margin-bottom: 12px;
-  letter-spacing: 1.5px;
-}
+    /* прогрес-бар – дуже плавний */
+    .progress-bar {
+      height: 14px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 100px;
+      margin: 32px 0 28px;
+      border: 1px solid rgba(255, 255, 255, 0.03);
+      overflow: hidden;
+      backdrop-filter: blur(2px);
+    }
 
-.main-stat .value {
-  font-size: 90px;
-  font-weight: 700;
-  line-height: 1;
-  font-family: 'Oswald', sans-serif;
-  display: inline-block;
-}
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      border-radius: 100px;
+      transition: width 5s cubic-bezier(0.23, 1, 0.32, 1);
+    }
 
-.scout .value { color: var(--scout-color); text-shadow: 0 0 30px var(--scout-glow); }
-.dealer .value { color: var(--damage-color); text-shadow: 0 0 30px var(--damage-glow); }
+    .scout .progress-fill {
+      background: linear-gradient(90deg, #1f9c50, #2ef27c, #9af7b3);
+    }
+    .dealer .progress-fill {
+      background: linear-gradient(90deg, #d63e5a, #ff5e7d, #ff9aab);
+    }
 
-/* Плавний ефект мікро-руху при зміні */
-@keyframes pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.02); opacity: 0.9; }
-  100% { transform: scale(1); }
-}
+    /* сітка другорядних показників */
+    .stats-mini-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
 
-.changing {
-  animation: pulse 0.15s ease-out;
-}
+    .stat-tile {
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 26px;
+      padding: 18px 8px;
+      text-align: center;
+      border: 1px solid rgba(255, 255, 255, 0.02);
+      backdrop-filter: blur(4px);
+    }
 
-.bar-bg {
-  height: 14px;
-  background: #0a0a0a;
-  border-radius: 3px;
-  margin-bottom: 30px;
-  border: 1px solid rgba(255,255,255,0.08);
-  overflow: hidden;
-}
+    .stat-tile .label {
+      font-size: 0.8rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.4);
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
 
-.bar-fill {
-  height: 100%;
-  width: 0%;
-  /* Синхронізуємо смужку з 5-секундною анімацією */
-  transition: width 5s cubic-bezier(0.23, 1, 0.32, 1);
-}
+    .stat-tile .digit {
+      font-size: 2.6rem;
+      font-weight: 700;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      line-height: 1;
+    }
 
-.scout .bar-fill { background: linear-gradient(90deg, #1b5e20, var(--scout-color)); }
-.dealer .bar-fill { background: linear-gradient(90deg, #b71c1c, var(--damage-color)); }
+    /* Кольори для цифр у другорядних показниках */
+    .stat-tile:first-child .digit {
+      color: #ff9800; /* помаранчевий для "Глядачі додали" */
+    }
+    .stat-tile:last-child .digit {
+      color: #26c6da; /* бірюзовий для "Виконано" */
+    }
 
-.stats-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 15px;
-}
+    /* крихітний індикатор оновлення */
+    .live-badge {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      background: #2ef27c;
+      border-radius: 10px;
+      margin-left: 10px;
+      box-shadow: 0 0 15px #2ef27c;
+      animation: pulse 2s infinite;
+    }
 
-.stat-box {
-  background: rgba(255,255,255,0.03);
-  padding: 15px 5px;
-  border-radius: 6px;
-  text-align: center;
-  border: 1px solid rgba(255,255,255,0.02);
-}
+    @keyframes pulse {
+      0% { opacity: 0.8; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.2); }
+      100% { opacity: 0.8; transform: scale(1); }
+    }
 
-.stat-box .small-label {
-  font-size: 14px;
-  color: #777;
-  text-transform: uppercase;
-  margin-bottom: 8px;
-}
-
-.stat-box .small-value {
-  font-size: 34px;
-  font-weight: 700;
-  font-family: 'Oswald', sans-serif;
-  color: #efefef;
-}
-</style>
+    /* адаптація для мобільних */
+    @media (max-width: 700px) {
+      .glass-card { min-width: 280px; }
+      .primary-stat .value { font-size: 4rem; }
+    }
+  </style>
 </head>
 <body>
 
-<div class="battle-container">
-  <div class="player-card scout">
-    <div class="header">
-      <div class="role-icon"><i class="fa-solid fa-binoculars"></i></div>
-      <div class="nickname">SaXon</div>
+<div class="tracker-grid">
+  <!-- Лівий гравець (розвідник) -->
+  <div class="glass-card scout">
+    <div class="card-header">
+      <div class="role-badge"><i class="fa-solid fa-binoculars"></i></div>
+      <span class="nickname">SaXon</span>
+      <span class="live-badge"></span>
     </div>
-    <div class="main-stat">
+
+    <div class="primary-stat">
       <div class="label">Залишилось насвітити</div>
       <div class="value" id="p1_left_big">0</div>
     </div>
-    <div class="bar-bg"><div class="bar-fill" id="p1_bar"></div></div>
-    <div class="stats-grid">
-      <div class="stat-box">
-        <div class="small-label">Глядачі додали</div>
-        <div class="small-value" id="p1_added">0</div>
+
+    <div class="progress-bar">
+      <div class="progress-fill" id="p1_bar"></div>
+    </div>
+
+    <div class="stats-mini-grid">
+      <div class="stat-tile">
+        <div class="label">Глядачі додали</div>
+        <div class="digit" id="p1_added">0</div>
       </div>
-      <div class="stat-box">
-        <div class="small-label">Виконано</div>
-        <div class="small-value" id="p1_done">0</div>
+      <div class="stat-tile">
+        <div class="label">Виконано</div>
+        <div class="digit" id="p1_done">0</div>
       </div>
     </div>
   </div>
 
-  <div class="player-card dealer">
-    <div class="header">
-      <div class="role-icon"><i class="fa-solid fa-crosshairs"></i></div>
-      <div class="nickname">Devil_484</div>
+  <!-- Правий гравець (дамагер) -->
+  <div class="glass-card dealer">
+    <div class="card-header">
+      <div class="role-badge"><i class="fa-solid fa-crosshairs"></i></div>
+      <span class="nickname">Devil_484</span>
+      <span class="live-badge" style="background:#ff5e7d; box-shadow:0 0 15px #ff5e7d;"></span>
     </div>
-    <div class="main-stat">
+
+    <div class="primary-stat">
       <div class="label">Залишилось настріляти</div>
       <div class="value" id="p2_left_big">0</div>
     </div>
-    <div class="bar-bg"><div class="bar-fill" id="p2_bar"></div></div>
-    <div class="stats-grid">
-      <div class="stat-box">
-        <div class="small-label">Глядачі додали</div>
-        <div class="small-value" id="p2_added">0</div>
+
+    <div class="progress-bar">
+      <div class="progress-fill" id="p2_bar"></div>
+    </div>
+
+    <div class="stats-mini-grid">
+      <div class="stat-tile">
+        <div class="label">Глядачі додали</div>
+        <div class="digit" id="p2_added">0</div>
       </div>
-      <div class="stat-box">
-        <div class="small-label">Виконано</div>
-        <div class="small-value" id="p2_done">0</div>
+      <div class="stat-tile">
+        <div class="label">Виконано</div>
+        <div class="digit" id="p2_done">0</div>
       </div>
     </div>
   </div>
 </div>
 
 <script>
-const SHEET_ID="17phnEn-NW-OnrZg4DcW65r-Xoq6ScsdVjS5yL0SS3fk";
-const GID="621327957";
-const URL=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=${GID}`;
-const REFRESH_MS = 5000;
+(function() {
+  // --- НАЛАШТУВАННЯ ---
+  const SHEET_ID = "17phnEn-NW-OnrZg4DcW65r-Xoq6ScsdVjS5yL0SS3fk";
+  const GID = "621327957";
+  const URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=${GID}`;
+  const REFRESH_MS = 5100; // 5.1 с, щоб анімація 5 с встигала завершитись
 
-let lastValues = { p1: 0, p2: 0 };
+  // DOM елементи
+  const p1LeftEl = document.getElementById('p1_left_big');
+  const p2LeftEl = document.getElementById('p2_left_big');
+  const p1AddedEl = document.getElementById('p1_added');
+  const p2AddedEl = document.getElementById('p2_added');
+  const p1DoneEl = document.getElementById('p1_done');
+  const p2DoneEl = document.getElementById('p2_done');
+  const p1Bar = document.getElementById('p1_bar');
+  const p2Bar = document.getElementById('p2_bar');
 
-function parseCSV(text){
-  const rows = [];
-  let row = [], cur = "", inQ = false;
-  for(let i=0;i<text.length;i++){
-    const ch = text[i];
-    if(ch === '"'){
-      if(inQ && text[i+1] === '"'){ cur += '"'; i++; }
-      else inQ = !inQ;
-    } else if(ch === ',' && !inQ){
-      row.push(cur); cur = "";
-    } else if(ch === '\n' && !inQ){
-      if(cur.endsWith('\r')) cur = cur.slice(0,-1);
+  // Зберігаємо останні значення left для анімації
+  let lastValues = { p1: 0, p2: 0 };
+  let animFrame1 = null;
+  let animFrame2 = null;
+
+  // --- ДОПОМІЖНІ ФУНКЦІЇ ---
+  function parseCSV(text) {
+    const rows = [];
+    let row = [], cur = "", inQ = false;
+    for (let i = 0; i < text.length; i++) {
+      const ch = text[i];
+      if (ch === '"') {
+        if (inQ && text[i+1] === '"') { cur += '"'; i++; }
+        else inQ = !inQ;
+      } else if (ch === ',' && !inQ) {
+        row.push(cur); cur = "";
+      } else if (ch === '\n' && !inQ) {
+        if (cur.endsWith('\r')) cur = cur.slice(0, -1);
+        row.push(cur); rows.push(row);
+        row = []; cur = "";
+      } else { cur += ch; }
+    }
+    if (cur.length || row.length) {
+      if (cur.endsWith('\r')) cur = cur.slice(0, -1);
       row.push(cur); rows.push(row);
-      row = []; cur = "";
-    } else { cur += ch; }
-  }
-  if(cur.length || row.length){
-    if(cur.endsWith('\r')) cur = cur.slice(0,-1);
-    row.push(cur); rows.push(row);
-  }
-  return rows;
-}
-
-function toNumber(val){
-  if(val === undefined || val === null) return 0;
-  const s = String(val).replace(/[^\d\-]/g, "");
-  const n = parseInt(s, 10);
-  return Number.isFinite(n) ? n : 0;
-}
-
-const fmt = v => Math.floor(v).toLocaleString("uk-UA");
-
-// Більш "гумова" функція уповільнення для 5 секунд
-function easeOutQuint(x) {
-  return 1 - Math.pow(1 - x, 5);
-}
-
-function animateValue(obj, start, end, duration) {
-  if (start === end) {
-      obj.textContent = fmt(end);
-      return;
-  }
-  
-  let startTimestamp = null;
-  const step = (timestamp) => {
-    if (!startTimestamp) startTimestamp = timestamp;
-    const elapsed = timestamp - startTimestamp;
-    const progress = Math.min(elapsed / duration, 1);
-    
-    const easedProgress = easeOutQuint(progress);
-    const current = start + (end - start) * easedProgress;
-    
-    obj.textContent = fmt(current);
-    
-    // Візуальний відгук
-    if (Math.abs(current - end) > 1) {
-       obj.classList.add('changing');
-       setTimeout(() => obj.classList.remove('changing'), 60);
     }
-    
-    if (progress < 1) {
-      window.requestAnimationFrame(step);
-    } else {
-      obj.textContent = fmt(end);
+    return rows;
+  }
+
+  function toNumber(val) {
+    if (val === undefined || val === null) return 0;
+    const s = String(val).replace(/[^\d\-]/g, "");
+    const n = parseInt(s, 10);
+    return Number.isFinite(n) ? n : 0;
+  }
+
+  const format = v => Math.floor(v).toLocaleString("uk-UA");
+
+  function easeOutQuint(x) {
+    return 1 - Math.pow(1 - x, 5);
+  }
+
+  function animateValue(element, start, end, duration, callback) {
+    if (start === end) {
+      element.textContent = format(end);
+      if (callback) callback();
+      return null;
     }
-  };
-  window.requestAnimationFrame(step);
-}
 
-function setBar(bar, done, left){
-  const total = Math.max(0, done + left);
-  const pct = total > 0 ? Math.max(0, Math.min(100, (done/total)*100)) : 0;
-  bar.style.width = pct.toFixed(1) + "%";
-}
+    let startTimestamp = null;
+    let frameId;
 
-async function load(){
-  try {
-    const r = await fetch(URL + "&_=" + Date.now());
-    const t = await r.text();
-    const d = parseCSV(t);
+    const step = (timestamp) => {
+      if (!startTimestamp) startTimestamp = timestamp;
+      const elapsed = timestamp - startTimestamp;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = easeOutQuint(progress);
+      const current = start + (end - start) * eased;
 
-    const p1_added_v = toNumber(d[9]?.[2]);
-    const p1_done_v  = toNumber(d[11]?.[2]);
-    const p1_left_v  = toNumber(d[13]?.[2]);
+      element.textContent = format(current);
 
-    const p2_added_v = toNumber(d[9]?.[3]);
-    const p2_done_v  = toNumber(d[11]?.[3]);
-    const p2_left_v  = toNumber(d[13]?.[3]);
+      if (progress < 1) {
+        frameId = window.requestAnimationFrame(step);
+      } else {
+        element.textContent = format(end);
+        if (callback) callback();
+      }
+    };
 
-    // Анімація триває рівно 5000мс
-    animateValue(p1_left_big, lastValues.p1, p1_left_v, 5000);
-    animateValue(p2_left_big, lastValues.p2, p2_left_v, 5000);
+    frameId = window.requestAnimationFrame(step);
+    return frameId;
+  }
 
-    lastValues.p1 = p1_left_v;
-    lastValues.p2 = p2_left_v;
+  function setBar(bar, done, left) {
+    const total = Math.max(0, done + left);
+    const percent = total > 0 ? Math.max(0, Math.min(100, (done / total) * 100)) : 0;
+    bar.style.width = percent.toFixed(2) + '%';
+  }
 
-    p1_added.textContent = fmt(p1_added_v);
-    p1_done.textContent  = fmt(p1_done_v);
-    setBar(p1_bar, p1_done_v, p1_left_v);
+  // --- ОСНОВНЕ ЗАВАНТАЖЕННЯ ---
+  async function loadData() {
+    try {
+      const response = await fetch(URL + "&_=" + Date.now());
+      const text = await response.text();
+      const data = parseCSV(text);
 
-    p2_added.textContent = fmt(p2_added_v);
-    p2_done.textContent  = fmt(p2_done_v);
-    setBar(p2_bar, p2_done_v, p2_left_v);
-    
-  } catch (e) { console.error(e); }
-}
+      const p1_added_v = toNumber(data[9]?.[2]);
+      const p1_done_v  = toNumber(data[11]?.[2]);
+      const p1_left_v  = toNumber(data[13]?.[2]);
 
-load();
-setInterval(load, REFRESH_MS);
+      const p2_added_v = toNumber(data[9]?.[3]);
+      const p2_done_v  = toNumber(data[11]?.[3]);
+      const p2_left_v  = toNumber(data[13]?.[3]);
+
+      // Миттєво оновлюємо другорядні цифри
+      p1AddedEl.textContent = format(p1_added_v);
+      p1DoneEl.textContent  = format(p1_done_v);
+      p2AddedEl.textContent = format(p2_added_v);
+      p2DoneEl.textContent  = format(p2_done_v);
+
+      // Оновлюємо прогрес-бари (плавно через CSS)
+      setBar(p1Bar, p1_done_v, p1_left_v);
+      setBar(p2Bar, p2_done_v, p2_left_v);
+
+      // Анімуємо великі числа left, тільки якщо попередня анімація завершилась
+      if (!animFrame1) {
+        animFrame1 = animateValue(p1LeftEl, lastValues.p1, p1_left_v, 5000, () => {
+          lastValues.p1 = p1_left_v;
+          animFrame1 = null;
+        });
+      }
+
+      if (!animFrame2) {
+        animFrame2 = animateValue(p2LeftEl, lastValues.p2, p2_left_v, 5000, () => {
+          lastValues.p2 = p2_left_v;
+          animFrame2 = null;
+        });
+      }
+
+      // Якщо анімація не запустилась, а значення змінилось — оновлюємо lastValues одразу
+      if (!animFrame1 && lastValues.p1 !== p1_left_v) lastValues.p1 = p1_left_v;
+      if (!animFrame2 && lastValues.p2 !== p2_left_v) lastValues.p2 = p2_left_v;
+
+    } catch (err) {
+      console.warn('Помилка завантаження:', err);
+    }
+  }
+
+  loadData();
+  setInterval(loadData, REFRESH_MS);
+})();
 </script>
 
+<!-- футер -->
+<div style="position: fixed; bottom: 8px; right: 16px; opacity: 0.3; font-size: 12px; color: #aaa; backdrop-filter: blur(4px); padding: 4px 12px; border-radius: 40px; background: rgba(0,0,0,0.3);">
+  <i class="fa-regular fa-eye"></i> 5s sync · кольорові цифри
+</div>
 </body>
 </html>
